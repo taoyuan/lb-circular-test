@@ -1,17 +1,20 @@
 import {BindingScope, inject, injectable} from '@loopback/core';
 import {
-  DefaultCrudRepository, Getter,
-  HasManyRepositoryFactory, repository,
+  DefaultCrudRepository,
+  Getter,
+  HasManyRepositoryFactory,
+  repository,
 } from '@loopback/repository';
 import {MemoryDataSource} from '../datasources';
 import {Task, User, UserRelations} from '../models';
 import {TaskRepository} from './task.repository';
 
-@injectable({scope: BindingScope.SINGLETON})
-export class UserRepository extends DefaultCrudRepository<User,
+@injectable({scope: BindingScope.TRANSIENT})
+export class UserRepository extends DefaultCrudRepository<
+  User,
   typeof User.prototype.id,
-  UserRelations> {
-
+  UserRelations
+> {
   public tasks: HasManyRepositoryFactory<Task, typeof Task.prototype.id>;
 
   constructor(
@@ -21,7 +24,10 @@ export class UserRepository extends DefaultCrudRepository<User,
   ) {
     super(User, dataSource);
 
-    this.tasks = this.createHasManyRepositoryFactoryFor('tasks', taskRepositoryGetter);
+    this.tasks = this.createHasManyRepositoryFactoryFor(
+      'tasks',
+      taskRepositoryGetter,
+    );
     this.registerInclusionResolver('tasks', this.tasks.inclusionResolver);
   }
 }
