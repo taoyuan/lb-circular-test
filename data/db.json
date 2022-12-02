@@ -1,0 +1,14 @@
+{
+  "ids": {
+    "Todo": 5,
+    "TodoList": 3
+  },
+  "models": {
+    "User": {
+      "1": "{\"name\":\"user\",\"id\":1}"
+    },
+    "Task": {
+      "1": "{\"name\":\"User Task\",\"userId\":1,\"id\":1}"
+    }
+  }
+}
