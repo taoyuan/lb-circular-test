@@ -23,7 +23,6 @@
     "eslint:fix": "yarn run eslint --fix",
     "pretest": "yarn run rebuild",
     "test": "lb-mocha --allow-console-logs \"dist/__tests__\"",
-    "posttest": "yarn run lint",
     "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && yarn run posttest",
     "docker:build": "docker build -t lb-4-circular-test .",
     "docker:run": "docker run -p 3000:3000 -d lb-4-circular-test",
