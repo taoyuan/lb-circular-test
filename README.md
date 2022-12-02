@@ -1,69 +1,37 @@
 # lb-4-circular-test
 
-This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
-[initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
+This is a test repo to demonstrate a circular dependency issue with `lb4`.
 
-## Install dependencies
+## Steps to reproduce
 
-By default, dependencies were installed when this application was generated.
-Whenever dependencies in `package.json` are changed, run the following command:
+1. Clone this repo
+2. Run `yarn`
+3. Run `yarn test`
 
-```sh
-yarn install
+## Expected result
+
+The test should pass.
+
+## Actual result
+
+The test fails with the following error:
+
+```
+ Error thrown from get /tasks => TaskController.find Error: Circular dependency detected: controllers.UserController --> @UserController.constructor[0] --> repositories.UserRepository --> @UserRepository.constructor[1] --> repositories.TaskRepository --> @TaskRepository.constructor[1] --> repositories.UserRepository
 ```
 
-## Run the application
+## Notes
 
-```sh
-yarn start
+The testing codes:
+
+```ts
+  it('invokes GET /query', async () => {
+    await client.get('/users').expect(200); // This line passes
+    await client.get('/tasks').expect(200); // This line fails
+  });
 ```
 
-You can also run `node .` to skip the build step.
-
-Open http://127.0.0.1:3000 in your browser.
-
-## Rebuild the project
-
-To incrementally build the project:
-
-```sh
-yarn run build
-```
-
-To force a full build by cleaning up cached artifacts:
-
-```sh
-yarn run rebuild
-```
-
-## Fix code style and formatting issues
-
-```sh
-yarn run lint
-```
-
-To automatically fix such issues:
-
-```sh
-yarn run lint:fix
-```
-
-## Other useful commands
-
-- `yarn run migrate`: Migrate database schemas for models
-- `yarn run openapi-spec`: Generate OpenAPI spec into a file
-- `yarn run docker:build`: Build a Docker image for this application
-- `yarn run docker:run`: Run this application inside a Docker container
-
-## Tests
-
-```sh
-yarn test
-```
-
-## What's next
-
-Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
-understand how you can continue to add features to this application.
-
-[![LoopBack](https://github.com/loopbackio/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png)](http://loopback.io/)
+- The error is thrown for the second rest call to `GET /tasks`
+- The dependency chain seams confusing. Shouldn't the circular dependency path be from `controllers.TaskController`? Why is `controllers.UserController` involved?
+- No error is thrown with `singletons: false` in repositories.
+- No error is thrown with all repositories injected in `controllers.UserController` constructor.
