@@ -2,7 +2,7 @@ import {Client} from '@loopback/testlab';
 import {CircularTestApplication} from '../..';
 import {setupApplication} from './test-helper';
 
-describe('PingController', () => {
+describe('Circular Testing', () => {
   let app: CircularTestApplication;
   let client: Client;
 
