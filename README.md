@@ -33,5 +33,5 @@ The testing codes:
 
 - The error is thrown for the second rest call to `GET /tasks`
 - The dependency chain seams confusing. Shouldn't the circular dependency path be from `controllers.TaskController`? Why is `controllers.UserController` involved?
-- No error is thrown with `singletons: false` in repositories.
+- No error is thrown with `{scope: BindingScope.TRANSIENT}` in repositories.
 - No error is thrown with all repositories injected in `controllers.UserController` constructor.
