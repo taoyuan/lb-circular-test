@@ -1,5 +1,5 @@
 import {
-  Filter,
+  Filter, Getter,
   repository,
 } from '@loopback/repository';
 import {
@@ -14,10 +14,8 @@ import '../repositories/user.repository';
 
 export class TaskController {
   constructor(
-    // @repository(UserRepository)
-    // public userRepository : UserRepository,
-    @repository(TaskRepository)
-    public taskRepository: TaskRepository,
+    @repository.getter(TaskRepository)
+    public getTaskRepository: Getter<TaskRepository>,
   ) {
   }
 
@@ -36,7 +34,8 @@ export class TaskController {
   async find(
     @param.filter(Task) filter?: Filter<Task>,
   ): Promise<Task[]> {
-    return this.taskRepository.find({
+    const taskRepository = await this.getTaskRepository();
+    return taskRepository.find({
       include: [
         {
           relation: 'user',
